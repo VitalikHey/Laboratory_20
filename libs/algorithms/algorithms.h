@@ -10,4 +10,6 @@
 // алгоритм решения первой задачки
 void firstTaskAlgorithm(matrix *m, size_t countRequests, size_t *requestsArray[]);
 
+void secondTaskAlgorithm(matrix m, matrix *newM, size_t rows, size_t cols);
+
 #endif //LABORATORY_20_ALGORITHMS_H
