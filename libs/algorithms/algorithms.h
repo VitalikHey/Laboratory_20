@@ -6,6 +6,7 @@
 #include <conio.h>
 
 #include "../matrix/matrix.h"
+#include "../domain/domain.h"
 
 // алгоритм решения первой задачки
 void firstTaskAlgorithm(matrix *m, size_t countRequests, size_t *requestsArray[]);
