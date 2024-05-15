@@ -1,0 +1,3 @@
+C:/Users/Виталий Курбанов/CLionProjects/Laboratory_20/cmake-build-debug/CMakeFiles/Laboratory_20.dir
+C:/Users/Виталий Курбанов/CLionProjects/Laboratory_20/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Виталий Курбанов/CLionProjects/Laboratory_20/cmake-build-debug/CMakeFiles/rebuild_cache.dir
