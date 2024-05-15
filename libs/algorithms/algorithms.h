@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <limits.h>
 #include <conio.h>
+#include <signal.h>
+#include <string.h>
 
 #include "../matrix/matrix.h"
 #include "../domain/domain.h"

@@ -1,4 +1,6 @@
 #include "algorithms.h"
+#include "signal.h"
+#include <unistd.h>
 
 bool isIndex(size_t rows, size_t cols, int indRow, int indCol){
     if (indRow > -1 && indRow < rows && indCol > -1 && indCol < cols){
@@ -233,53 +235,74 @@ void sixthTaskAlgorithm(const char *s, size_t length, char *result,
     *resultLength = calcResultLength;
 }
 
+int searchMaxInd(int array[], int start, int end) {
+    int maxNum = array[start];
+    int maxInd = start;
 
-int searchMaxInd(const int array[], int start, int end){
-    if (start > end){
-        return end + 1;
-    } else{
-        int maxNumInd = start;
-        for (int ind = start + 1; ind <= end; ind++){
-            if (array[ind] > array[maxNumInd]){
-                maxNumInd = ind;
-            }
+    for (int i = start + 1; i <= end; i++) {
+        if (array[i] > maxNum) {
+            maxNum = array[i];
+            maxInd = i;
         }
+    }
 
-        return maxNumInd;
+    return maxInd;
+}
+
+void buildNodes(node *currentNode, int array[], int startInd, int endInd, bool isLeft) {
+    if (startInd > endInd) {
+        return;
+    }
+
+    int maxInd = searchMaxInd(array, startInd, endInd);
+    node *newNode = createNode(array[maxInd]);
+
+    if (isLeft) {
+        currentNode->left = newNode;
+    } else {
+        currentNode->right = newNode;
+    }
+
+    buildNodes(newNode, array, startInd, maxInd - 1, true);
+    buildNodes(newNode, array, maxInd + 1, endInd, false);
+}
+
+void breadthFirstTraversal(node *root) {
+    if (root == NULL) {
+        return;
+    }
+
+    node *queue[100];  // Используем массив для имитации очереди
+    int front = 0, rear = 0;
+    queue[rear++] = root;
+
+    while (front < rear) {
+        node *current = queue[front++];
+        printf("%d ", current->key);
+
+        if (current->left != NULL) {
+            queue[rear++] = current->left;
+        }
+        if (current->right != NULL) {
+            queue[rear++] = current->right;
+        }
     }
 }
 
-
-void buildNodes(node *p, int array[], int start, int end, bool isLeft){
-    int maxNumInd = searchMaxInd(array, start, end);
-    if (maxNumInd == end + 1){
-        if (isLeft)
-            p->left = NULL;
-        else
-            p->right = NULL;
-        printf("null ");
+void seventhTaskAlgorithm(int array[], int lengthArray) {
+    if (lengthArray == 0) {
         return;
-
-    } else{
-        printf("%d ", array[maxNumInd]);
-        node *newNode = insert(p, array[maxNumInd], isLeft);
-        buildNodes(newNode, array, start, maxNumInd - 1, true);
-        buildNodes(newNode, array, maxNumInd + 1, end, false);
     }
-}
 
+    int maxNumInd = searchMaxInd(array, 0, lengthArray - 1);
+    node *root = createNode(array[maxNumInd]);
+    printf("%d ", array[maxNumInd]);
+    buildNodes(root, array, 0, maxNumInd - 1, true);
+    buildNodes(root, array, maxNumInd + 1, lengthArray - 1, false);
+    printf("\n");
 
-void seventhTaskAlgorithm(int array[], int lengthArray){
-    if (lengthArray == 0){
-        return;
-    } else{
-        int maxNumInd = searchMaxInd(array, 0, lengthArray - 1);
-        node *newNode = createNode(array[maxNumInd]);
-        printf("%d ", array[maxNumInd]);
-        buildNodes(newNode, array, 0, maxNumInd - 1, true);
-        buildNodes(newNode, array, maxNumInd + 1, lengthArray - 1, false);
-        printf("\n");
-    }
+    breadthFirstTraversal(root);
+    printf("\n");
 }
 
 void eighthTaskAlgorithm(const char *s, size_t length,
@@ -291,26 +314,38 @@ void eighthTaskAlgorithm(const char *s, size_t length,
 }
 
 
-void fillingFile(int numsArray[], size_t lengthArray, char *fileName){
-    FILE *file = openFile(fileName, "w");
+void fillingFile(int numsArray[], size_t lengthArray, char *fileName) {
+    FILE *file = fopen(fileName, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file %s\n", fileName);
+        return;
+    }
 
-    for (size_t ind = 0; ind < lengthArray; ind++){
+    for (size_t ind = 0; ind < lengthArray; ind++) {
         fprintf(file, "%d ", numsArray[ind]);
     }
 
     fclose(file);
 }
 
+void readingNumsFilteringAndWriting(vector *v, char *rFileName, int controlNum, char *wFileName) {
+    FILE *rFile = fopen(rFileName, "r");
+    if (rFile == NULL) {
+        fprintf(stderr, "Error opening file %s\n", rFileName);
+        return;
+    }
 
-void readingNumsFilteringAndWriting(vector *v, char *rFileName,
-                                    int controlNum, char *wFileName){
-    FILE *rFile = openFile(rFileName, "r");
-    FILE *wFile = openFile(wFileName, "w");
+    FILE *wFile = fopen(wFileName, "w");
+    if (wFile == NULL) {
+        fprintf(stderr, "Error opening file %s\n", wFileName);
+        fclose(rFile);
+        return;
+    }
 
     int num;
-    while (fscanf(rFile, "%d", &num) == 1){
-        if (num < controlNum){
-            pushBack(v, num);
+    while (fscanf(rFile, "%d", &num) == 1) {
+        if (num < controlNum) {
+            v->data[v->size++] = num;
             fprintf(wFile, "%d ", num);
         }
     }
@@ -319,15 +354,48 @@ void readingNumsFilteringAndWriting(vector *v, char *rFileName,
     fclose(wFile);
 }
 
+void shrinkToFit(vector *v) {
+    int *newData = (int *)malloc(sizeof(int) * v->size);
+    for (size_t i = 0; i < v->size; i++) {
+        newData[i] = v->data[i];
+    }
 
-void ninthTaskAlgorithm(int numsArray[], size_t lengthArray, int controlNum,
-                        char *firstFileName, char *secondFileName, vector *v){
+    free(v->data);
+    v->data = newData;
+    v->capacity = v->size;
+}
+
+void ninthTaskAlgorithm(int numsArray[], size_t lengthArray, int controlNum, char *firstFileName, char *secondFileName, vector *v) {
     fillingFile(numsArray, lengthArray, firstFileName);
-
-    readingNumsFilteringAndWriting(v, firstFileName,
-                                   controlNum, secondFileName);
-
+    readingNumsFilteringAndWriting(v, firstFileName, controlNum, secondFileName);
     shrinkToFit(v);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 6) {
+        printf("Usage: %s <num1> <num2> <num3> <file1> <file2>\n", argv[0]);
+        return 1;
+    }
+
+    int num1 = atoi(argv[1]);
+    int num2 = atoi(argv[2]);
+    int num3 = atoi(argv[3]);
+
+    char *file1 = argv[4];
+    char *file2 = argv[5];
+
+    vector *v = (vector *)malloc(sizeof(vector));
+    v->data = (int *)malloc(sizeof(int) * 100); // Assuming initial capacity of 100
+    v->size = 0;
+    v->capacity = 100;
+
+    int numsArray[] = {num1, num2, num3};
+    ninthTaskAlgorithm(numsArray, 3, 50, file1, file2, v);
+
+    free(v->data);
+    free(v);
+
+    return 0;
 }
 
 
@@ -338,20 +406,30 @@ void fillingFileWithText(char *fileName, char *text){
 }
 
 
-void tenthTaskAlgorithm(char *fileName, size_t countOutputLines, char *text){
+void signalHandler(int signum) {
+    if (signum == SIGINT) {
+        printf("\nCtrl + C pressed. Exiting...\n");
+        exit(0);
+    }
+}
+
+void tenthTaskAlgorithm(char *fileName, size_t countOutputLines, char *text) {
     fillingFileWithText(fileName, text);
 
     FILE *file = openFile(fileName, "r");
 
     char line[127];
     size_t count = 0;
+
+    signal(SIGINT, signalHandler);
+
     while (fgets(line, 127, file) != NULL) {
         printf("%s", line);
         count++;
 
         if (count == countOutputLines){
             printf("Press Ctrl + C\n");
-            while (getch() != 3);
+            pause();
         }
     }
 }
