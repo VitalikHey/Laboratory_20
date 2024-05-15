@@ -201,3 +201,75 @@ void fifthTaskAlgorithm(matrix m, size_t rows, size_t cols, size_t *result){
 
     *result = calcResult;
 }
+
+void sixthTaskAlgorithm(const char *s, size_t length, char *result,
+                        size_t *resultLength){
+    char buffer[10];
+    size_t bufferLength = 0;
+    size_t calcResultLength = 0;
+
+    char num = '1';
+    for (size_t ind = 0; ind < length; ind++) {
+        buffer[bufferLength++] = num++;
+        if (s[ind] == 'I') {
+            while (bufferLength > 0)
+                result[calcResultLength++] = buffer[--bufferLength];
+        }
+    }
+
+    buffer[bufferLength++] = num;
+    while (bufferLength > 0)
+        result[calcResultLength++] = buffer[--bufferLength];
+
+    result[calcResultLength] = '\0';
+    *resultLength = calcResultLength;
+}
+
+
+int searchMaxInd(const int array[], int start, int end){
+    if (start > end){
+        return end + 1;
+    } else{
+        int maxNumInd = start;
+        for (int ind = start + 1; ind <= end; ind++){
+            if (array[ind] > array[maxNumInd]){
+                maxNumInd = ind;
+            }
+        }
+
+        return maxNumInd;
+    }
+}
+
+
+void buildNodes(node *p, int array[], int start, int end, bool isLeft){
+    int maxNumInd = searchMaxInd(array, start, end);
+    if (maxNumInd == end + 1){
+        if (isLeft)
+            p->left = NULL;
+        else
+            p->right = NULL;
+        printf("null ");
+        return;
+
+    } else{
+        printf("%d ", array[maxNumInd]);
+        node *newNode = insert(p, array[maxNumInd], isLeft);
+        buildNodes(newNode, array, start, maxNumInd - 1, true);
+        buildNodes(newNode, array, maxNumInd + 1, end, false);
+    }
+}
+
+
+void seventhTaskAlgorithm(int array[], int lengthArray){
+    if (lengthArray == 0){
+        return;
+    } else{
+        int maxNumInd = searchMaxInd(array, 0, lengthArray - 1);
+        node *newNode = createNode(array[maxNumInd]);
+        printf("%d ", array[maxNumInd]);
+        buildNodes(newNode, array, 0, maxNumInd - 1, true);
+        buildNodes(newNode, array, maxNumInd + 1, lengthArray - 1, false);
+        printf("\n");
+    }
+}
