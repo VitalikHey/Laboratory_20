@@ -8,6 +8,13 @@ bool isIndex(size_t rows, size_t cols, int indRow, int indCol){
     return false;
 }
 
+int cellResultByPosition(matrix m, int indRow, int indCol,
+                         size_t countNeighbors){
+    return ((m.values[indRow][indCol] == 1 && (countNeighbors == 2
+                                               || countNeighbors == 3)) ||
+            (m.values[indRow][indCol] == 0 && countNeighbors == 3));
+}
+
 
 size_t calculateCountNeighbors(matrix m, int rowInd, int colInd,
                                size_t rows, size_t cols){
