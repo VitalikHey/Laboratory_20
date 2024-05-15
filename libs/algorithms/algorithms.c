@@ -92,6 +92,23 @@ void fillingNumFrameSorted(int *array, matrix m, size_t indRow, size_t indCol){
     qsort(array, 8, sizeof(int), sortedNumsCompare);
 }
 
+void fillingCalcMatrix(matrix m, matrix *calcMatrix, size_t rows, size_t cols){
+    for (size_t indRow = 0; indRow < rows; indRow++){
+        for (size_t indCol = 0; indCol < cols; indCol++){
+            if (m.values[indRow][indCol] == 1){
+                if (indRow != 0){
+                    calcMatrix->values[indRow][indCol] =
+                            calcMatrix->values[indRow - 1][indCol] + 1;
+                }
+                else{
+                    calcMatrix->values[indRow][indCol] = 1;
+                }
+            } else {
+                calcMatrix->values[indRow][indCol] = 0;
+            }
+        }
+    }
+}
 
 void firstTaskAlgorithm(matrix *m, size_t countRequests, size_t *requestsArray[]){
     size_t row1, col1, row2, col2;
@@ -158,4 +175,29 @@ void fourthTaskAlgorithm(domain array[], size_t size){
     }
 
     outputResultDomains(results, sizeResult);
+}
+
+
+
+void fifthTaskAlgorithm(matrix m, size_t rows, size_t cols, size_t *result){
+    matrix calcMatrix = getMemMatrix(rows, cols);
+    fillingCalcMatrix(m, &calcMatrix, rows, cols);
+
+    size_t calcResult = 0;
+    for (size_t indCol = 0; indCol < cols; indCol++){
+        for (size_t indRow = 0; indRow < rows; indRow++){
+            for (size_t indK = indCol + 1; indK < cols + 1; indK++){
+                int min = calcMatrix.values[indRow][indCol];
+                for (size_t indFromColToK = indCol; indFromColToK < indK;
+                     indFromColToK++){
+                    if (calcMatrix.values[indRow][indFromColToK] < min){
+                        min = calcMatrix.values[indRow][indFromColToK];
+                    }
+                }
+                calcResult += min;
+            }
+        }
+    }
+
+    *result = calcResult;
 }
