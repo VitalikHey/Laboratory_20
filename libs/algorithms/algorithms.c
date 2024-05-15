@@ -18,6 +18,14 @@ bool searchNumFromArray(const size_t array[], size_t length, size_t num){
     return false;
 }
 
+FILE* openFile(char *fileName, char *action){
+    FILE *file = fopen(fileName, action);
+    if (file == NULL) {
+        printf("Error opening the file\n");
+        exit(1);
+    }
+    return file;
+}
 
 size_t searchDomainInResults(const domain results[], size_t size, char *s){
     for (size_t ind = 0; ind < size; ind++){
@@ -271,5 +279,79 @@ void seventhTaskAlgorithm(int array[], int lengthArray){
         buildNodes(newNode, array, 0, maxNumInd - 1, true);
         buildNodes(newNode, array, maxNumInd + 1, lengthArray - 1, false);
         printf("\n");
+    }
+}
+
+void eighthTaskAlgorithm(const char *s, size_t length,
+                         const size_t indexes[], char *newS){
+    for (size_t ind = 0; ind < length; ind++){
+        newS[ind] = s[indexes[ind]];
+    }
+    newS[length] = '\0';
+}
+
+
+void fillingFile(int numsArray[], size_t lengthArray, char *fileName){
+    FILE *file = openFile(fileName, "w");
+
+    for (size_t ind = 0; ind < lengthArray; ind++){
+        fprintf(file, "%d ", numsArray[ind]);
+    }
+
+    fclose(file);
+}
+
+
+void readingNumsFilteringAndWriting(vector *v, char *rFileName,
+                                    int controlNum, char *wFileName){
+    FILE *rFile = openFile(rFileName, "r");
+    FILE *wFile = openFile(wFileName, "w");
+
+    int num;
+    while (fscanf(rFile, "%d", &num) == 1){
+        if (num < controlNum){
+            pushBack(v, num);
+            fprintf(wFile, "%d ", num);
+        }
+    }
+
+    fclose(rFile);
+    fclose(wFile);
+}
+
+
+void ninthTaskAlgorithm(int numsArray[], size_t lengthArray, int controlNum,
+                        char *firstFileName, char *secondFileName, vector *v){
+    fillingFile(numsArray, lengthArray, firstFileName);
+
+    readingNumsFilteringAndWriting(v, firstFileName,
+                                   controlNum, secondFileName);
+
+    shrinkToFit(v);
+}
+
+
+void fillingFileWithText(char *fileName, char *text){
+    FILE *file = openFile(fileName, "w");
+    fprintf(file, "%s", text);
+    fclose(file);
+}
+
+
+void tenthTaskAlgorithm(char *fileName, size_t countOutputLines, char *text){
+    fillingFileWithText(fileName, text);
+
+    FILE *file = openFile(fileName, "r");
+
+    char line[127];
+    size_t count = 0;
+    while (fgets(line, 127, file) != NULL) {
+        printf("%s", line);
+        count++;
+
+        if (count == countOutputLines){
+            printf("Press Ctrl + C\n");
+            while (getch() != 3);
+        }
     }
 }

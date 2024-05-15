@@ -8,6 +8,7 @@
 #include "../matrix/matrix.h"
 #include "../domain/domain.h"
 #include "../node/node.h"
+#include "../vector/vector.h"
 
 void firstTaskAlgorithm(matrix *m, size_t countRequests, size_t *requestsArray[]);
 
