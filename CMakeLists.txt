@@ -8,4 +8,6 @@ add_executable(Laboratory_20
         libs/algorithms/algorithms.c
         libs/algorithms/algorithms.h
         libs/matrix/matrix.h
-        libs/matrix/matrix.c)
+        libs/matrix/matrix.c
+        libs/tests/tests.h
+        libs/tests/tests.c)

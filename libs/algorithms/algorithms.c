@@ -371,34 +371,6 @@ void ninthTaskAlgorithm(int numsArray[], size_t lengthArray, int controlNum, cha
     shrinkToFit(v);
 }
 
-int main(int argc, char *argv[]) {
-    if (argc < 6) {
-        printf("Usage: %s <num1> <num2> <num3> <file1> <file2>\n", argv[0]);
-        return 1;
-    }
-
-    int num1 = atoi(argv[1]);
-    int num2 = atoi(argv[2]);
-    int num3 = atoi(argv[3]);
-
-    char *file1 = argv[4];
-    char *file2 = argv[5];
-
-    vector *v = (vector *)malloc(sizeof(vector));
-    v->data = (int *)malloc(sizeof(int) * 100); // Assuming initial capacity of 100
-    v->size = 0;
-    v->capacity = 100;
-
-    int numsArray[] = {num1, num2, num3};
-    ninthTaskAlgorithm(numsArray, 3, 50, file1, file2, v);
-
-    free(v->data);
-    free(v);
-
-    return 0;
-}
-
-
 void fillingFileWithText(char *fileName, char *text){
     FILE *file = openFile(fileName, "w");
     fprintf(file, "%s", text);
