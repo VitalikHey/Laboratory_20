@@ -405,3 +405,43 @@ void tenthTaskAlgorithm(char *fileName, size_t countOutputLines, char *text) {
         }
     }
 }
+
+#define MAXN 300005
+#define MAXQ 5005
+#define MAXLEN 2000005
+
+char dictionary[MAXN][MAXQ];
+char prefix[MAXLEN];
+int n, q;
+
+int binarySearch(char* word) {
+    int low = 0, high = n-1, mid;
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (strncmp(dictionary[mid], word, strlen(word)) < 0) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return high + 1;
+}
+
+void eleventhTaskAlgorithm() {
+    scanf("%d %d", &n, &q);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%s", dictionary[i]);
+    }
+
+    for (int i = 0; i < q; i++) {
+        int k;
+        scanf("%d %s", &k, prefix);
+        int start = binarySearch(prefix);
+        if (strncmp(dictionary[start], prefix, strlen(prefix)) == 0) {
+            printf("%d\n", start + k);
+        } else {
+            printf("-1\n");
+        }
+    }
+}

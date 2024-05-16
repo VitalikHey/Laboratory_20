@@ -196,3 +196,28 @@ void testTenthTask(){
     char text[200] = "123\n456\n789\n0";
     tenthTaskAlgorithm(fileName, countOutputLines, text);
 }
+
+void testEleventhTask() {
+    char dictionary1[5][25] = {"apple", "banana", "cherry", "orange", "pear"};
+    char prefix1[25] = "b";
+    int n = 5, q = 1;
+
+    printf("%d %d\n", n, q);
+    for (int i = 0; i < n; i++) {
+        printf("%s\n", dictionary1[i]);
+    }
+
+    printf("%d %s\n", 1, prefix1);
+
+    char dictionary2[5][25] = {"apple", "banana", "cherry", "orange", "pear"};
+    char prefix2[25] = "ap";
+    n = 5;
+    q = 1;
+
+    printf("%d %d\n", n, q);
+    for (int i = 0; i < n; i++) {
+        printf("%s\n", dictionary2[i]);
+    }
+
+    printf("%d %s\n", 3, prefix2);
+}
